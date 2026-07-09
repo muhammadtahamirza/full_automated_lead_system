@@ -1,0 +1,29 @@
+# --- Python Virtual Environment ---
+.venv/
+env/
+venv/
+
+# --- Environment Secrets ---
+.env
+.env.*
+!.env.example
+
+# --- Python Cache & Temporary Files ---
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/             # Created when you run tests
+.coverage                  # Created by test coverage reports
+htmlcov/                   # Visual test reports
+
+# --- Database & Migrations ---
+*.db                       # Prevents committing local SQLite databases
+*.sqlite3                  # Prevents committing Django/SQLAlchemy local DBs
+
+# --- FastAPI / Python Build Artifacts ---
+.mypy_cache/               # Created if you use Mypy type-checking
+.ruff_cache/               # Created if you use Ruff/Flake8 for linting
+build/
+dist/
+*.egg-info/
