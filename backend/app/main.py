@@ -1,7 +1,7 @@
 from sqlmodel import SQLModel
 from fastapi import FastAPI
 import models
-from db import engine
+from backend.app.core.database import engine
 
 from routes import leadRoute
 app = FastAPI()

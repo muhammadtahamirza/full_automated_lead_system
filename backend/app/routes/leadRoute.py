@@ -2,7 +2,7 @@ from sqlmodel import Session, select
 from fastapi import APIRouter, Depends
 from schemas import UserCreate
 from models import Lead, MailAccount
-from db import engine, get_session
+from backend.app.core.database import engine, get_session
 router = APIRouter()
 
 
