@@ -1,0 +1,55 @@
+from core.routers import build_crud_router
+from .models import Lead, CreateLead, UpdateLead
+
+leadRotuer = build_crud_router(
+	model=Lead,
+    create_schema=CreateLead,
+    update_schema=UpdateLead,
+    prefix="/leads",
+    tag="Leads",
+
+)
+
+
+
+
+
+
+
+
+"""specifc cruds"""
+# @router.post("/lead", response_model= Lead)
+# def create_lead(lead : CreateLead,  session:db_session ):
+# 	ld = repository(session, Lead)
+# 	db_lead = lead.model_dump()
+# 	user = Lead(**db_lead)
+# 	row = ld.create_row(user)
+# 	return row
+
+
+# @router.get("/lead", response_model=list[Lead])
+# def read_all_leads(session: db_session):
+#     ld = repository(session, Lead)
+#     rows = ld.get_all_rows()
+#     return rows
+
+# @router.get("/lead/{id}", response_model=Lead)
+# def read_lead_by_id(id: int, session: db_session):
+# 	ld = repository(session, Lead)
+# 	row = ld.get_row_from_id(id)
+# 	return row
+
+
+# @router.put("/lead/{id}", response_model=Lead)
+# def update_lead(id :int, ld: UpdateLead, session: db_session):
+# 	db = repository(session, Lead)
+# 	return db.update_row(id, ld)
+
+
+# @router.delete("/lead/{id}")
+# def delete_lead(id:int, session: db_session):
+# 	db = repository(session, Lead)
+# 	status = db.delete_row(id)
+# 	return status
+
+
