@@ -1,21 +1,25 @@
 from sqlmodel import SQLModel
-from fastapi import FastAPI
-import models
-from backend.app.core.database import engine
+from fastapi import FastAPI, Depends
+from core.database import engine
 
-from routes import leadRoute
+from features.leads.routers import leadRotuer
+from features.mailboxes.routers import mailRouter
+from features.outreach.routers import outreachRouter
+
+
 app = FastAPI()
 
 
 SQLModel.metadata.create_all(engine)
 
+app.include_router(leadRotuer)
+app.include_router(mailRouter)
+app.include_router(outreachRouter)
 
-app.include_router(leadRoute.router)
+
 
 @app.get("/")
 def health():
 	return{
 		"message" : "working fine"
 	}
-
-

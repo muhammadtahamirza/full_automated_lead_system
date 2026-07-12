@@ -18,7 +18,9 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-from app.models import Lead, MailAccount, Campaign
+from app.features.leads.models import Lead
+from app.features.mailboxes.models import MailAccount
+from app.features.outreach.models import Template
 from sqlmodel import SQLModel
 target_metadata = SQLModel.metadata
 
