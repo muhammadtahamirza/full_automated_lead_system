@@ -1,15 +1,26 @@
 from sqlmodel import SQLModel, Field
 
 
-class CreateTemplate(SQLModel):
-	subject: str
-	body: str
+#TODO : adding rest of data in campgasins for AI agent understanding like system prompts etc
 
-class UpdateTemplate(SQLModel):
-	subject: str | None = None
-	body: str | None = None
+class CreateCampaign(SQLModel):
+	name: str
 
+class UpdateCampaign(SQLModel):
+	name : str | None = None
 
-class Template(CreateTemplate, table=True):
+class Campaign(CreateCampaign, table= True):
 	id: int | None = Field(default=None, primary_key=True)
 
+
+
+## tables for many-to-many relatoins
+"""connecting leads to campaigns"""
+
+class CampaignLeads(SQLModel, table=True):
+	pass
+
+
+"""connecting templates to campaigns"""
+class CampaignTemplates(SQLModel, table =True):
+	pass
