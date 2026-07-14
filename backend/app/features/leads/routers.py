@@ -1,15 +1,27 @@
 from core.routers import build_crud_router
+from sqlmodel import Session, insert
+from core.database import get_session, Session
+from fastapi import File, UploadFile, Depends
 from .models import Lead, CreateLead, UpdateLead
+from .services import upload_leads_csv
 
+prefix = "/leads"
 leadRotuer = build_crud_router(
 	model=Lead,
     create_schema=CreateLead,
     update_schema=UpdateLead,
-    prefix="/leads",
+    prefix=prefix,
     tag="Leads",
 
 )
 
+## TODO to be decided weather i should allow direct upload or not
+@leadRotuer.post("/upload-leads-csv")
+def upload_csv(file : UploadFile = File(...) , db: Session = Depends(get_session)):
+	valid_ids = upload_leads_csv(file,db)
+	return{
+		"status" : f"{len(valid_ids)} rows inserted"
+	}
 
 
 
