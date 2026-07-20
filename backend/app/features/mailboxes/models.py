@@ -7,6 +7,7 @@ class CreateMail(SQLModel):
     password : str
     smtp_server : str
     port : int
+    daily_limit : int
 
 class UpdateMail(SQLModel):
     email: str | None = None

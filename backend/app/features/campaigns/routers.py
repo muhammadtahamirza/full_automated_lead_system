@@ -19,7 +19,7 @@ campaignRouter = build_crud_router(
 
 
 
-@campaignRouter.post("add-templates-campaign")
+@campaignRouter.post("/add-templates-campaign")
 def add_template_to_campaign(templ : CampaignTemplates,  db : Session = Depends(get_session)):
 
 	template = db.get(Template, templ.template_id)
@@ -35,7 +35,7 @@ def add_template_to_campaign(templ : CampaignTemplates,  db : Session = Depends(
 	}
 
 
-@campaignRouter.get("get-all-templates")
+@campaignRouter.get("/get-all-templates")
 def get_all_tmeplate_of_campaing(camp_id : int ,  db : Session = Depends(get_session)):
 	statement = select(CampaignTemplates, Template).join(Template).where(CampaignTemplates.campaign_id == camp_id)
 	rows = db.exec(statement).all()
@@ -49,7 +49,7 @@ def get_all_tmeplate_of_campaing(camp_id : int ,  db : Session = Depends(get_ses
 
 
 
-@campaignRouter.post("add-leads-campaign")
+@campaignRouter.post("/add-leads-campaign")
 def add_leads_csv_campagin(camp_id: int, file : UploadFile = File(...),  db : Session = Depends(get_session)):
 	valid_ids = upload_leads_csv(file, db)
 
@@ -75,7 +75,7 @@ def add_leads_csv_campagin(camp_id: int, file : UploadFile = File(...),  db : Se
 	}
 
 
-@campaignRouter.get("get-all-leads")
+@campaignRouter.get("/get-all-leads")
 def get_all_tmeplate_of_campaing(camp_id : int ,  db : Session = Depends(get_session)):
 	statement = select(CampaignLeads, Lead).join(Lead).where(CampaignLeads.campaign_id == camp_id)
 	rows = db.exec(statement).all()
@@ -88,5 +88,11 @@ def get_all_tmeplate_of_campaing(camp_id : int ,  db : Session = Depends(get_ses
 
 
 
+@campaignRouter.post("/start-campaign")
+def start_email_campaigns(campgain_id : int, db : Session = Depends(get_session)):
 
+	1. pick some emails into redis
+	2. make tasks and send to celery via redis, update the db as well
+
+	pass
 

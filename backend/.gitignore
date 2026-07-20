@@ -27,3 +27,7 @@ htmlcov/                   # Visual test reports
 build/
 dist/
 *.egg-info/
+
+
+
+database.db

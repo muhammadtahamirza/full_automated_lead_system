@@ -20,7 +20,8 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 from app.features.leads.models import Lead
 from app.features.mailboxes.models import MailAccount
-from app.features.outreach.models import Template
+from app.features.templates.models import Template
+from app.features.campaigns.models import Campaign, CampaignTemplates, CampaignLeads
 from sqlmodel import SQLModel
 target_metadata = SQLModel.metadata
 
