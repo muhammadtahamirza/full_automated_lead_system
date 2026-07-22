@@ -1,6 +1,7 @@
 from core.routers import build_crud_router
+from features.campaigns.celery_worker import celery_app # just for setup
 from core.database import get_session, Session
-from fastapi import Depends, File, UploadFile
+from fastapi import Depends, File, UploadFile, APIRouter
 from sqlmodel import select, insert
 from features.templates.models import Template
 from features.campaigns.models import Campaign, CampaignTemplates, CampaignLeads
@@ -9,25 +10,13 @@ from .models import Campaign, CreateCampaign, UpdateCampaign
 from features.leads.services import upload_leads_csv
 
 from .services import trigger_campaign
-# campaignRouter = build_crud_router(
-# 	model=Campaign,
-#     create_schema=CreateCampaign,
-#     update_schema=UpdateCampaign,
-#     prefix="/campaign",
-#     tag="Camgaigns",
-# )
-from fastapi import APIRouter
 
-campaignRouter = APIRouter()
 
-@campaignRouter.post("/trigger_campgain")
-def do_test(db : Session = Depends(get_session)):
-
-	return trigger_campaign(1, db)
+campaignRouter = APIRouter(prefix="/campaign", tags=["Campaigns"])
 
 
 
-@campaignRouter.post("/add-templates-campaign")
+@campaignRouter.post("/data/add-templates-campaign")
 def add_template_to_campaign(templ : CampaignTemplates,  db : Session = Depends(get_session)):
 
 	template = db.get(Template, templ.template_id)
@@ -43,7 +32,7 @@ def add_template_to_campaign(templ : CampaignTemplates,  db : Session = Depends(
 	}
 
 
-@campaignRouter.get("/get-all-templates")
+@campaignRouter.get("/data/get-all-templates")
 def get_all_tmeplate_of_campaing(camp_id : int ,  db : Session = Depends(get_session)):
 	statement = select(CampaignTemplates, Template).join(Template).where(CampaignTemplates.campaign_id == camp_id)
 	rows = db.exec(statement).all()
@@ -57,7 +46,7 @@ def get_all_tmeplate_of_campaing(camp_id : int ,  db : Session = Depends(get_ses
 
 
 
-@campaignRouter.post("/add-leads-campaign")
+@campaignRouter.post("/data/add-leads-campaign")
 def add_leads_csv_campagin(camp_id: int, file : UploadFile = File(...),  db : Session = Depends(get_session)):
 	valid_ids = upload_leads_csv(file, db)
 
@@ -83,8 +72,8 @@ def add_leads_csv_campagin(camp_id: int, file : UploadFile = File(...),  db : Se
 	}
 
 
-@campaignRouter.get("/get-all-leads")
-def get_all_tmeplate_of_campaing(camp_id : int ,  db : Session = Depends(get_session)):
+@campaignRouter.get("/data/data/get-all-leads")
+def get_all_leads_of_campaing(camp_id : int ,  db : Session = Depends(get_session)):
 	statement = select(CampaignLeads, Lead).join(Lead).where(CampaignLeads.campaign_id == camp_id)
 	rows = db.exec(statement).all()
 	only_leads_rows = [lead for camp_templ, lead in  rows]  ## seperate all lead rows to return
@@ -96,6 +85,20 @@ def get_all_tmeplate_of_campaing(camp_id : int ,  db : Session = Depends(get_ses
 
 
 
-@campaignRouter.post("/start-campaign")
+@campaignRouter.post("/action/start-campaign")
 def start_email_campaigns(campgain_id : int, db : Session = Depends(get_session)):
 	return trigger_campaign(campaign_id=campgain_id, db=db)
+
+
+
+## adding CRUD
+
+genericCRUD = build_crud_router(
+	model=Campaign,
+    create_schema=CreateCampaign,
+    update_schema=UpdateCampaign,
+    prefix="/campaign",
+    tag="Camgaigns",
+)
+
+campaignRouter.include_router(genericCRUD)

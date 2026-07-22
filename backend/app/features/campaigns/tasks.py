@@ -1,5 +1,5 @@
 import redis
-from celery import Celery, shared_task
+from .celery_worker import celery_app
 import smtplib
 import time
 from email.message import EmailMessage
@@ -9,21 +9,15 @@ from features.leads.models import Lead
 from features.templates.models import Template
 
 
-redis_client = redis.Redis(host='localhost', port=6379,db=0, decode_responses=True)
-
-celery= Celery(
-    name ="sendEmail",
-    broker="redis://127.0.0.1:6379/0",
-    backend="redis://127.0.0.1:6379/0"
-)
 
 
-@shared_task
+@celery_app.task
 def send_single_email( mailbox_id : int, lead_id : int, template_id : int ):
 	"""
 	This is the only part that actually waits and sends.
 	It executes exactly when the 'countdown' timer hits zero.
 	"""
+
 	# fech from db
 	with Session(engine) as db:
 		mailbox = db.get(MailAccount, mailbox_id)
@@ -45,6 +39,8 @@ def send_single_email( mailbox_id : int, lead_id : int, template_id : int ):
 	msg['To'] = lead_email
 	msg.set_content(template.body)
 
+	print("sent ... " + sender_email + " , " + lead_email + ", " + template.body)
+	return
 
 	try:
 		with smtplib.SMTP_SSL(smtp_server, port) as server:

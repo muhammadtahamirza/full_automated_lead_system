@@ -1,11 +1,12 @@
 from sqlmodel import create_engine, Session
 from fastapi import Depends
 from typing import Annotated
-sqlite_file_name = "database.db"
-sqlite_url = f"sqlite:///{sqlite_file_name}"
 
 
-engine = create_engine(sqlite_url)
+#TODO put username pass in .env
+DATABASE_URL = "postgresql://postgres:password@localhost:5432/postgres"
+
+engine = create_engine(DATABASE_URL, echo=True)
 
 
 
