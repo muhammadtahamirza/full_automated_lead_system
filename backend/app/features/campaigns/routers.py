@@ -8,14 +8,22 @@ from features.leads.models import Lead
 from .models import Campaign, CreateCampaign, UpdateCampaign
 from features.leads.services import upload_leads_csv
 
+from .services import trigger_campaign
+# campaignRouter = build_crud_router(
+# 	model=Campaign,
+#     create_schema=CreateCampaign,
+#     update_schema=UpdateCampaign,
+#     prefix="/campaign",
+#     tag="Camgaigns",
+# )
+from fastapi import APIRouter
 
-campaignRouter = build_crud_router(
-	model=Campaign,
-    create_schema=CreateCampaign,
-    update_schema=UpdateCampaign,
-    prefix="/campaign",
-    tag="Camgaigns",
-)
+campaignRouter = APIRouter()
+
+@campaignRouter.post("/trigger_campgain")
+def do_test(db : Session = Depends(get_session)):
+
+	return trigger_campaign(1, db)
 
 
 
@@ -90,9 +98,4 @@ def get_all_tmeplate_of_campaing(camp_id : int ,  db : Session = Depends(get_ses
 
 @campaignRouter.post("/start-campaign")
 def start_email_campaigns(campgain_id : int, db : Session = Depends(get_session)):
-
-	1. pick some emails into redis
-	2. make tasks and send to celery via redis, update the db as well
-
-	pass
-
+	return trigger_campaign(campaign_id=campgain_id, db=db)

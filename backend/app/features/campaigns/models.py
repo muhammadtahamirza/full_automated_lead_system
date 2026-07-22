@@ -1,13 +1,18 @@
 from sqlmodel import SQLModel, Field
-
+from datetime import time
 
 #TODO : adding rest of data in campgasins for AI agent understanding like system prompts etc
 
 class CreateCampaign(SQLModel):
 	name: str
+	daily_sending_limit: int
+	daily_start_execution_time: time
 
 class UpdateCampaign(SQLModel):
 	name : str | None = None
+	daily_sending_limit : int | None = None
+	daily_start_execution_time: time| None = None
+
 
 class Campaign(CreateCampaign, table= True):
 	id: int | None = Field(default=None, primary_key=True)
